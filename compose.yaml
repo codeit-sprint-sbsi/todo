@@ -1,0 +1,21 @@
+services:
+  db:
+    # 검증한 PostgreSQL 17.7 이미지로 고정합니다.
+    image: postgres:17@sha256:2006493727bd5277eece187319af1ef82b4cf82cf4fc1ed00da0775b646ac2a4
+    environment:
+      POSTGRES_DB: todo_assessment
+      POSTGRES_USER: assessment
+      POSTGRES_PASSWORD: assessment_local
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assessment -d todo_assessment"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+volumes:
+  postgres_data:
